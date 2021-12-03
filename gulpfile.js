@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
@@ -7,16 +9,54 @@ const autoprefixer = require('autoprefixer');
 const postcss = require('gulp-postcss');
 const browserSync = require('browser-sync').create();
 const del = require('del');
+const webpackStream = require('webpack-stream');
 
 sass.compiler = require('node-sass');
 
 gulp.task('styles', function() {
 	return gulp
-		.src([ 'app/scss/style.scss', 'app/scss/grid.scss' ])
+		.src(['app/scss/style.scss', 'app/scss/grid.scss'])
 		.pipe(sass())
 		.pipe(concat('application.css'))
-		.pipe(postcss([ autoprefixer() ]))
+		.pipe(postcss([autoprefixer()]))
 		.pipe(gulp.dest('public/css/'));
+});
+
+gulp.task('webpack-dev', function() {
+	let options = {
+		mode: 'development',
+		context: path.resolve(__dirname, 'app'),
+		entry: {
+			app: './js/babel/index.js'
+		},
+		output: {
+			path: path.join(__dirname, '/public/js'),
+			filename: 'bundle.js',
+			publicPath: '/'
+		},
+		module: {
+			rules: [
+				{
+					test: /\.(js|jsx)$/,
+					include: path.join(__dirname, 'app'),
+					exclude: /node_modules/,
+					use: [
+						{
+							loader: 'babel-loader',
+							options: {
+								presets: ['@babel/preset-react', '@babel/preset-env']
+							}
+						}
+					]
+				}
+			]
+		}
+	};
+
+	return gulp
+		.src(['app/js/babel/*.js', 'app/js/babel/*.jsx'])
+		.pipe(webpackStream(options))
+		.pipe(gulp.dest('public/js/'));
 });
 
 gulp.task('scripts', function() {
@@ -67,7 +107,7 @@ gulp.task('assets', function() {
 	return gulp.src('app/assets/**', { since: gulp.lastRun('assets') }).pipe(gulp.dest('public'));
 });
 
-gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts', 'assets')));
+gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts', 'assets', 'webpack-dev')));
 
 gulp.task('watch', function() {
 	gulp.watch('app/scss/**/*.*', gulp.series('styles'));
