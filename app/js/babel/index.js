@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Comp } from './Comp.jsx';
 
 const Test = () => {
@@ -17,3 +18,5 @@ const Test = () => {
 		</div>
 	);
 };
+
+ReactDOM.render(<Test />, document.getElementById('root'));

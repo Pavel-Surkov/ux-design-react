@@ -21,6 +21,9 @@ $is_promocode = get_field('promocode_bool', 2);
 ?>
 <!-- Begin main -->
 <main class="main template payment-page pages-template">
+	<div id="root"></div>
+</main>
+<main class="main template payment-page pages-template">
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
@@ -292,4 +295,7 @@ $is_promocode = get_field('promocode_bool', 2);
     </label>
 </template>
 <!-- End template -->
+<!-- Begin React -->
+<script type="text/javascript" src="https://dev.ux-mind.pro/wp-content/themes/ux-mind-school/js/bundle.js"></script>
+<!-- End React -->
 <?php get_footer();
