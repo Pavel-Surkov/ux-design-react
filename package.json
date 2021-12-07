@@ -4,7 +4,8 @@
   "description": "**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build",
+    "test": "editorconfig-checker --exclude '.git|node_modules|.DS_Store'"
   },
   "author": "ux-mind.pro",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
     "browser-sync": "^2.26.7",
+    "editorconfig-checker": "^4.0.2",
     "gulp-sourcemap": "^1.0.1",
     "gulp-sourcemaps": "^3.0.0",
     "webpack-stream": "^7.0.0"
