@@ -111,7 +111,7 @@ gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts', 'asse
 
 gulp.task('watch', function() {
 	gulp.watch('app/scss/**/*.*', gulp.series('styles'));
-	gulp.watch('app/js/**/*.*', gulp.series('scripts'));
+	gulp.watch('app/js/**/*.*', gulp.series('scripts', 'webpack-dev'));
 	gulp.watch('app/assets/**/*.*', gulp.series('assets'));
 });
 
