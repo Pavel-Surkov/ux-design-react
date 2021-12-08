@@ -5,7 +5,7 @@ import { Comp } from './Comp.jsx';
 const Test = () => {
 	const [value, setValue] = useState('red');
 
-	handleClick = () => {
+	const handleClick = () => {
 		alert(value);
 		setValue('blue');
 	};

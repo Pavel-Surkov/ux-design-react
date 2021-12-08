@@ -296,6 +296,6 @@ $is_promocode = get_field('promocode_bool', 2);
 </template>
 <!-- End template -->
 <!-- Begin React -->
-<script type="text/javascript" src="https://dev.ux-mind.pro/wp-content/themes/ux-mind-school/js/bundle.js"></script>
+
 <!-- End React -->
 <?php get_footer();

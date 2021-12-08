@@ -119,6 +119,11 @@ function add_scripts_and_styles() {
 		// Подключаем скрипты
 		wp_enqueue_script('application-home');
 	endif;
+	if ( is_page_template('payment.php') ):
+		wp_register_script('payment', get_template_directory_uri() . '/js/bundle.js', array('application'), null, true);
+		// Подключаем скрипты
+		wp_enqueue_script('payment');
+	endif;
 	wp_register_script('custom', get_template_directory_uri() . '/js/custom.js', array('jquery'), null, true);
 }
 
@@ -1516,19 +1521,22 @@ function custom_item_class( $classes, $item, $args, $depth ){
 			$classes = ["dropdown__item"];
 		}
 	 }
-	 else if ('Footer first' == $args->theme_location || 'Footer second' == $args->theme_location) {
-		if ($parent_term_id == 3):
-			$term_arg = array('cat'=>$parent_term_id, 'post_status'=>'publish');
-			$posts_obj = get_posts( $term_arg );
-			if (!$posts_obj):
-				$classes = ["footer-menu__item", "footer-menu__item_visibility-hidden"];
-			else:
-				$classes = ["footer-menu__item"];
-			endif;
+	 else if ( 'Footer first' == $args->theme_location ) {
+		$classes = ["footer-menu__item"];
+	 }
+	else if ( 'Footer second' == $args->theme_location ):
+		$term_arg = array(
+			'cat' => $parent_term_id,
+			'post_status' => 'publish',
+			'posts_per_page' => -1
+		);
+		$term_query = new WP_Query( $term_arg );
+		if ( !$term_query->have_posts() ):
+			$classes = ["footer-menu__item", "footer-menu__item_visibility-hidden"];
 		else:
 			$classes = ["footer-menu__item"];
 		endif;
-	 }
+	endif;
 	return $classes;
 
 }
