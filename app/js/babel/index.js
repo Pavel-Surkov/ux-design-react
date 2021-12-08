@@ -6,8 +6,7 @@ const Test = () => {
 	const [value, setValue] = useState('red');
 
 	const handleClick = () => {
-		alert(value);
-		setValue('blue');
+		alert('Clicked!');
 	};
 
 	return (

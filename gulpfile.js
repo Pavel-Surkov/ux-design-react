@@ -30,7 +30,7 @@ gulp.task('webpack-dev', function() {
 			app: './js/babel/index.js'
 		},
 		output: {
-			path: path.join(__dirname, '/public/js'),
+			path: path.join(__dirname, 'public/js'),
 			filename: 'bundle.js',
 			publicPath: '/'
 		},
@@ -44,7 +44,7 @@ gulp.task('webpack-dev', function() {
 						{
 							loader: 'babel-loader',
 							options: {
-								presets: ['@babel/preset-react', '@babel/preset-env']
+								presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }]]
 							}
 						}
 					]
