@@ -20,9 +20,7 @@ $page_id = $page_queried_object->ID;
 $is_promocode = get_field('promocode_bool', 2);
 ?>
 <!-- Begin main -->
-<main class="main template payment-page pages-template">
-	<div id="root"></div>
-</main>
+<div id="payment-root"></div>
 <main class="main template payment-page pages-template">
 	<div class="container">
 		<div class="row">

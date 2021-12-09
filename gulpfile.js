@@ -34,6 +34,9 @@ gulp.task('webpack-dev', function() {
 			filename: 'bundle.js',
 			publicPath: '/'
 		},
+		resolve: {
+			extensions: ['.js', '.jsx', '.json', '.wasm']
+		},
 		module: {
 			rules: [
 				{
@@ -48,6 +51,11 @@ gulp.task('webpack-dev', function() {
 							}
 						}
 					]
+				},
+				{
+					test: /\.(js|jsx)$/,
+					enforce: 'pre',
+					use: ['source-map-loader']
 				}
 			]
 		}

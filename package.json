@@ -16,6 +16,9 @@
     "editorconfig-checker": "^4.0.2",
     "gulp-sourcemap": "^1.0.1",
     "gulp-sourcemaps": "^3.0.0",
+    "mobx": "^6.3.8",
+    "mobx-react-lite": "^3.2.2",
+    "source-map-loader": "^3.0.0",
     "webpack-stream": "^7.0.0"
   },
   "dependencies": {
