@@ -53,6 +53,10 @@ export const PaymentCourseSelect = () => {
 		courseSelect.innerHTML = target.innerHTML;
 	};
 
+	// TODO: Change json data or script.
+	// "undefined – Оплата следующего этапа действующего курса" - is incorrect
+	// (Check course select if needed)
+
 	return (
 		<div ref={formElementRef} className="form__input form__select payment-form__select payment-form__input">
 			<div className="ums-select">
