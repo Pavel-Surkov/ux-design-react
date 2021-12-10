@@ -73,6 +73,18 @@ export const PaymentCourseSelect = () => {
 								result = coursesArr.map(course => {
 									const [name, date, place] = course.name.split(', ');
 
+									if (!name || !date || !place) {
+										return (
+											<li
+												className="ums-select__list-item"
+												onClick={handleCourseClick}
+												key={course.name}
+											>
+												{course.name}
+											</li>
+										);
+									}
+
 									return (
 										<li
 											className="ums-select__list-item"
