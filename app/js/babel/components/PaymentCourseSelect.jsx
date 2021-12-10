@@ -1,19 +1,34 @@
 import React, { useEffect, useRef } from 'react';
 import { Observer } from 'mobx-react-lite';
 import { paymentStore } from '../stores';
-import { isEmpty, getData } from '../functions/functions';
-import { currentRoot } from '../variables';
+import { isEmpty, getData } from '../functions';
+import { postsUrl } from '../variables';
 
 export const PaymentCourseSelect = () => {
-	const coursesUrl = `${currentRoot}/data/paymentCourses.json`;
+	const coursesUrl = `${postsUrl}`;
 
 	const formElementRef = useRef(null);
 	const selectElementRef = useRef(null);
 
-	useEffect(() => {
+	useEffect(async () => {
 		if (isEmpty(paymentStore.data)) {
 			// Fetches data and sets it in the paymentStore if there is no data
-			getData(coursesUrl, paymentStore);
+			const posts = await getData(coursesUrl);
+
+			const categories = [15, 1, 2, 4, 5, 99, 121, 124];
+
+			// Sorts data using categories
+			const sortedPosts = posts.filter(post => {
+				for (let el of post.categories) {
+					if (categories.indexOf(el) >= 0) {
+						return true;
+					}
+				}
+
+				return false;
+			});
+
+			// TODO: Think what to do with sorted data
 		}
 	}, []);
 

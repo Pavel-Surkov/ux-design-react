@@ -5,12 +5,13 @@ export function isEmpty(obj) {
 	return false;
 }
 
-export const getData = async (url, store) => {
+export const getData = async url => {
 	const coursesResponse = await fetch(url);
 
 	if (coursesResponse.ok) {
 		const data = await coursesResponse.json();
-		store.setData(data);
+
+		return data;
 	} else {
 		throw new Error(coursesResponse.status);
 	}
