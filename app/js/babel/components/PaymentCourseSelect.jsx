@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Observer } from 'mobx-react-lite';
-import { paymentStore } from '../stores/';
+import { paymentStore } from '../stores';
 import { isEmpty, getData } from '../functions/functions';
 import { currentRoot } from '../variables';
 
@@ -12,6 +12,7 @@ export const PaymentCourseSelect = () => {
 
 	useEffect(() => {
 		if (isEmpty(paymentStore.data)) {
+			// Fetches data and sets it in the paymentStore if there is no data
 			getData(coursesUrl, paymentStore);
 		}
 	}, []);
@@ -27,82 +28,93 @@ export const PaymentCourseSelect = () => {
 		courseList.classList.toggle('ums-select__list_visibility-open');
 	};
 
-	const handleCourseClick = e => {
+	const handleCourseClick = (e, courseName) => {
 		const target = e.target;
 
 		const formEl = formElementRef.current;
 		const courseSelect = selectElementRef.current;
 		const courseList = courseSelect.nextElementSibling;
 
+		const coursesArr = paymentStore.data.courses;
+		const selectedCourse = coursesArr.find(course => course.name === courseName);
+
+		// adds classes that are needed
 		target.classList.add('ums-select__list-item_state-active');
 		formEl.classList.toggle('form__select_state-active');
 		courseList.classList.toggle('ums-select__list_visibility-open');
 		courseSelect.classList.toggle('ums-select__btn_state-active');
 
+		courseSelect.innerHTML = target.innerHTML;
+
+		// Sets values that we need to use in payment methods section
 		if (paymentStore.currentValues.previousElementItem) {
 			const oldCourse = paymentStore.currentValues.previousElementItem;
 
 			oldCourse.classList.remove('ums-select__list-item_state-active');
+			paymentStore.setSelectedCourse(selectedCourse);
 			paymentStore.setPreviousElementItem(target);
-			paymentStore.setSelectedCourse(target.innerHTML);
+			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		} else {
+			paymentStore.setSelectedCourse(selectedCourse);
 			paymentStore.setPreviousElementItem(target);
-			paymentStore.setSelectedCourse(target.innerHTML);
+			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		}
-
-		courseSelect.innerHTML = target.innerHTML;
 	};
 
-	// TODO: Change json data or script.
-	// "undefined – Оплата следующего этапа действующего курса" - is incorrect
-	// (Check course select if needed)
-
 	return (
-		<div ref={formElementRef} className="form__input form__select payment-form__select payment-form__input">
-			<div className="ums-select">
-				<button ref={selectElementRef} className="ums-select__btn" onClick={handleBtnClick}>
-					Нажмите, чтобы выбрать курс
-				</button>
-				<ul className="ums-select__list">
-					<Observer>
-						{() => {
-							const coursesArr = paymentStore.data.courses;
-							let result = false;
+		<section className="payment-form__section">
+			<p className="payment-form__section-name">1. Выберите курс</p>
+			<div className="payment-form__section-grid">
+				<div ref={formElementRef} className="form__input form__select payment-form__select payment-form__input">
+					<div className="ums-select">
+						<button ref={selectElementRef} className="ums-select__btn" onClick={handleBtnClick}>
+							Нажмите, чтобы выбрать курс
+						</button>
+						<ul className="ums-select__list">
+							<Observer>
+								{() => {
+									const coursesArr = paymentStore.data.courses;
+									let result = false;
 
-							if (coursesArr) {
-								result = coursesArr.map(course => {
-									const [name, date, place] = course.name.split(', ');
+									if (coursesArr) {
+										result = coursesArr.map(course => {
+											const [name, date, place] = course.name.split(', ');
 
-									if (!name || !date || !place) {
-										return (
-											<li
-												className="ums-select__list-item"
-												onClick={handleCourseClick}
-												key={course.name}
-											>
-												{course.name}
-											</li>
-										);
+											{
+												/* if the data item is not a course item */
+											}
+											if (!name || !date || !place) {
+												return (
+													<li
+														className="ums-select__list-item"
+														onClick={e => handleCourseClick(e, course.name)}
+														key={course.name}
+													>
+														{course.name}
+													</li>
+												);
+											}
+
+											return (
+												<li
+													className="ums-select__list-item"
+													onClick={e => handleCourseClick(e, course.name)}
+													key={course.name}
+												>
+													{`${date} – ${name} `}
+													<span>{`(${place})`}</span>
+												</li>
+											);
+										});
 									}
 
-									return (
-										<li
-											className="ums-select__list-item"
-											onClick={handleCourseClick}
-											key={course.name}
-										>
-											{`${date} – ${name} `}
-											<span>{`(${place})`}</span>
-										</li>
-									);
-								});
-							}
-
-							return result;
-						}}
-					</Observer>
-				</ul>
+									return result;
+								}}
+							</Observer>
+						</ul>
+					</div>
+				</div>
 			</div>
-		</div>
+		</section>
 	);
 };

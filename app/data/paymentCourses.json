@@ -2,23 +2,28 @@
 	"courses": [
 		{
 			"name": "Оплата следующего этапа действующего курса",
-			"price": "0"
+			"price": "0",
+			"methods": ["erip", "halva", "bank", "card", "cherepaha"]
 		},
 		{
 			"name": "Моушн-дизайнер, 29 ноября, дистанционное обучение через zoom",
-			"price": "850"
+			"price": "850",
+			"methods": ["erip", "alpha-bank", "halva", "bank", "card", "cherepaha"]
 		},
 		{
 			"name": "UX/UI Веб-дизайнер, 7 декабря, занятия в классе",
-			"price": "930"
+			"price": "930",
+			"methods": ["erip", "alpha-bank", "halva", "bank", "card", "cherepaha"]
 		},
 		{
 			"name": "UX/UI Веб-дизайнер, 7 декабря, дистанционное обучение через zoom",
-			"price": "850"
+			"price": "850",
+			"methods": ["erip", "alpha-bank", "halva", "bank", "card", "cherepaha"]
 		},
 		{
 			"name": "Дизайн интерьера, 7 декабря, дистанционное обучение через zoom",
-			"price": "850"
+			"price": "850",
+			"methods": ["erip", "alpha-bank", "halva", "bank", "card", "cherepaha"]
 		}
 	]
 }
