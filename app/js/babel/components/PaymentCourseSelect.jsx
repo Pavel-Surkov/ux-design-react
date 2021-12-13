@@ -17,7 +17,7 @@ export const PaymentCourseSelect = () => {
 		const categories = [15, 1, 2, 4, 5, 99, 121, 124];
 
 		// Sorts data using categories
-		const sortedPosts = posts.filter(post => {
+		const coursePosts = posts.filter(post => {
 			for (let el of post.categories) {
 				if (categories.indexOf(el) >= 0) {
 					return true;
@@ -25,6 +25,22 @@ export const PaymentCourseSelect = () => {
 			}
 
 			return false;
+		});
+
+		// Sorts data by dates
+		const sortedPosts = coursePosts.sort((prevPost, post) => {
+			const prevPostStart = prevPost.acf['ums_course_info_start'];
+			const prevPostStr = `${prevPostStart.slice(0, 4)}-${prevPostStart.slice(4, 6)}-${prevPostStart.slice(
+				6,
+				8
+			)}`;
+			const prevPostDate = new Date(prevPostStr);
+
+			const postDateStr = post.acf['ums_course_info_start'];
+			const postStr = `${postDateStr.slice(0, 4)}-${postDateStr.slice(4, 6)}-${postDateStr.slice(6, 8)}`;
+			const postDate = new Date(postStr);
+
+			return prevPostDate - postDate;
 		});
 
 		paymentStore.setCourses(sortedPosts);
@@ -41,22 +57,42 @@ export const PaymentCourseSelect = () => {
 		courseList.classList.toggle('ums-select__list_visibility-open');
 	};
 
-	const handleCourseClick = (e, courseName) => {
-		// TODO: re-write this to a correct script
+	const handleCourseClick = (e, courseId) => {
 		const target = e.target;
 
 		const formEl = formElementRef.current;
 		const courseSelect = selectElementRef.current;
 		const courseList = courseSelect.nextElementSibling;
 
-		const coursesArr = paymentStore.data.courses;
-		const selectedCourse = coursesArr.find(course => course.name === courseName);
-
-		// adds classes that are needed
+		// Adds classes to manage select
 		target.classList.add('ums-select__list-item_state-active');
 		formEl.classList.toggle('form__select_state-active');
 		courseList.classList.toggle('ums-select__list_visibility-open');
 		courseSelect.classList.toggle('ums-select__btn_state-active');
+
+		if (courseId === 1) {
+			paymentStore.setSelectedCourse({
+				id: 1,
+				title: {
+					rendered: 'Оплата следующего этапа действующего курса'
+				}
+			});
+
+			if (paymentStore.currentValues.previousElementItem) {
+				const oldCourse = paymentStore.currentValues.previousElementItem;
+				oldCourse.classList.remove('ums-select__list-item_state-active');
+			}
+
+			paymentStore.setPreviousElementItem(target);
+			paymentStore.setSelectedCourseHTML(target.innerHTML);
+
+			courseSelect.innerHTML = target.innerHTML;
+
+			return;
+		}
+
+		const coursesArr = paymentStore.courses;
+		const selectedCourse = coursesArr.find(course => course.id === courseId);
 
 		courseSelect.innerHTML = target.innerHTML;
 
@@ -73,8 +109,6 @@ export const PaymentCourseSelect = () => {
 			paymentStore.setPreviousElementItem(target);
 			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		}
-
-		// Set last course obj to paymentStore.selectedCourse
 	};
 
 	return (
@@ -87,7 +121,9 @@ export const PaymentCourseSelect = () => {
 							Нажмите, чтобы выбрать курс
 						</button>
 						<ul className="ums-select__list">
-							<li className="ums-select__list-item">Оплата следующего этапа действующего курса</li>
+							<li className="ums-select__list-item" onClick={e => handleCourseClick(e, 1)}>
+								Оплата следующего этапа действующего курса
+							</li>
 							<Observer>
 								{() => {
 									const coursesArr = paymentStore.courses;
@@ -96,6 +132,7 @@ export const PaymentCourseSelect = () => {
 									if (coursesArr) {
 										result = coursesArr.map(course => {
 											const courseId = course.id;
+
 											const [name, dateNum, typeNum] = [
 												course.title.rendered,
 												course.acf['ums_course_info_start'],
@@ -103,11 +140,7 @@ export const PaymentCourseSelect = () => {
 											];
 											const type = courseType[typeNum];
 
-											let [year, month, day] = [
-												dateNum.slice(0, 4),
-												dateNum.slice(4, 6),
-												dateNum.slice(6, 8)
-											];
+											let [month, day] = [dateNum.slice(4, 6), dateNum.slice(6, 8)];
 
 											if (day[0] === '0') {
 												day = day[1];
@@ -118,7 +151,7 @@ export const PaymentCourseSelect = () => {
 											return (
 												<li
 													className="ums-select__list-item"
-													onClick={e => handleCourseClick(e, name)}
+													onClick={e => handleCourseClick(e, courseId)}
 													key={courseId}
 												>
 													{`${date} – ${name} `}

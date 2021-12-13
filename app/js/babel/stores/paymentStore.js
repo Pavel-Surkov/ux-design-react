@@ -17,7 +17,7 @@ const createPaymentStore = () => {
 				this.currentValues.selectedCourse = obj;
 			},
 			setSelectedCourseHTML(course) {
-				this.currentValues.selectedCourse = course;
+				this.currentValues.selectedCourseHTML = course;
 			},
 			setPreviousElementItem(el) {
 				this.currentValues.previousElementItem = el;
