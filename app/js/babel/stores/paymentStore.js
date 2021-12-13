@@ -3,9 +3,9 @@ import { makeObservable, observable, action } from 'mobx';
 const createPaymentStore = () => {
 	return makeObservable(
 		{
-			data: {},
-			setData(data) {
-				this.data = JSON.parse(JSON.stringify(data));
+			courses: [],
+			setCourses(data) {
+				this.data = this.courses = data;
 			},
 			// For managing state of the course select
 			currentValues: {
@@ -24,8 +24,8 @@ const createPaymentStore = () => {
 			}
 		},
 		{
-			data: observable,
-			setData: action,
+			courses: observable,
+			setCourses: action,
 			currentValues: observable,
 			setSelectedCourse: action,
 			setSelectedCourseHTML: action,

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Observer } from 'mobx-react-lite';
 import { paymentStore } from '../stores';
-import { isEmpty, getData } from '../functions';
-import { postsUrl } from '../variables';
+import { getData } from '../functions';
+import { postsUrl, courseType, monthTranslation } from '../variables';
 
 export const PaymentCourseSelect = () => {
 	const coursesUrl = `${postsUrl}`;
@@ -11,25 +11,23 @@ export const PaymentCourseSelect = () => {
 	const selectElementRef = useRef(null);
 
 	useEffect(async () => {
-		if (isEmpty(paymentStore.data)) {
-			// Fetches data and sets it in the paymentStore if there is no data
-			const posts = await getData(coursesUrl);
+		// Fetches data and sets it in the paymentStore if there is no data
+		const posts = await getData(coursesUrl);
 
-			const categories = [15, 1, 2, 4, 5, 99, 121, 124];
+		const categories = [15, 1, 2, 4, 5, 99, 121, 124];
 
-			// Sorts data using categories
-			const sortedPosts = posts.filter(post => {
-				for (let el of post.categories) {
-					if (categories.indexOf(el) >= 0) {
-						return true;
-					}
+		// Sorts data using categories
+		const sortedPosts = posts.filter(post => {
+			for (let el of post.categories) {
+				if (categories.indexOf(el) >= 0) {
+					return true;
 				}
+			}
 
-				return false;
-			});
+			return false;
+		});
 
-			// TODO: Think what to do with sorted data
-		}
+		paymentStore.setCourses(sortedPosts);
 	}, []);
 
 	const handleBtnClick = e => {
@@ -44,6 +42,7 @@ export const PaymentCourseSelect = () => {
 	};
 
 	const handleCourseClick = (e, courseName) => {
+		// TODO: re-write this to a correct script
 		const target = e.target;
 
 		const formEl = formElementRef.current;
@@ -74,6 +73,8 @@ export const PaymentCourseSelect = () => {
 			paymentStore.setPreviousElementItem(target);
 			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		}
+
+		// Set last course obj to paymentStore.selectedCourse
 	};
 
 	return (
@@ -86,38 +87,42 @@ export const PaymentCourseSelect = () => {
 							Нажмите, чтобы выбрать курс
 						</button>
 						<ul className="ums-select__list">
+							<li className="ums-select__list-item">Оплата следующего этапа действующего курса</li>
 							<Observer>
 								{() => {
-									const coursesArr = paymentStore.data.courses;
+									const coursesArr = paymentStore.courses;
 									let result = false;
 
 									if (coursesArr) {
 										result = coursesArr.map(course => {
-											const [name, date, place] = course.name.split(', ');
+											const courseId = course.id;
+											const [name, dateNum, typeNum] = [
+												course.title.rendered,
+												course.acf['ums_course_info_start'],
+												course.acf['ums_course_info_type']
+											];
+											const type = courseType[typeNum];
 
-											{
-												/* if the data item is not a course item */
+											let [year, month, day] = [
+												dateNum.slice(0, 4),
+												dateNum.slice(4, 6),
+												dateNum.slice(6, 8)
+											];
+
+											if (day[0] === '0') {
+												day = day[1];
 											}
-											if (!name || !date || !place) {
-												return (
-													<li
-														className="ums-select__list-item"
-														onClick={e => handleCourseClick(e, course.name)}
-														key={course.name}
-													>
-														{course.name}
-													</li>
-												);
-											}
+
+											const date = `${day} ${monthTranslation[month]}`;
 
 											return (
 												<li
 													className="ums-select__list-item"
-													onClick={e => handleCourseClick(e, course.name)}
-													key={course.name}
+													onClick={e => handleCourseClick(e, name)}
+													key={courseId}
 												>
 													{`${date} – ${name} `}
-													<span>{`(${place})`}</span>
+													<span>{`(${type})`}</span>
 												</li>
 											);
 										});
