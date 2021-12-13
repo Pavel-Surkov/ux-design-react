@@ -70,6 +70,7 @@ export const PaymentCourseSelect = () => {
 		courseList.classList.toggle('ums-select__list_visibility-open');
 		courseSelect.classList.toggle('ums-select__btn_state-active');
 
+		// If it's payment of the next stage of a course
 		if (courseId === 1) {
 			paymentStore.setSelectedCourse({
 				id: 1,

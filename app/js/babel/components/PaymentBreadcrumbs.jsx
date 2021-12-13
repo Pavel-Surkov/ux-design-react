@@ -1,4 +1,8 @@
+import React, { useEffect } from 'react';
+
 export const PaymentBreadcrumbs = () => {
+	useEffect(() => {}, []);
+
 	return (
 		<div className="breadcrumbs breadcrumbs_style-dark template__breadcrumbs">
 			{/* HERE MUST BE A BREADCRUMBS QUERY */}
