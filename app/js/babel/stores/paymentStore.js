@@ -9,12 +9,12 @@ const createPaymentStore = () => {
 			},
 			// For managing state of the course select
 			currentValues: {
-				selectedCourse: {},
+				selectedCourseData: {},
 				selectedCourseHTML: null,
 				previousElementItem: null
 			},
-			setSelectedCourse(obj) {
-				this.currentValues.selectedCourse = obj;
+			setSelectedCourseData(obj) {
+				this.currentValues.selectedCourseData = obj;
 			},
 			setSelectedCourseHTML(course) {
 				this.currentValues.selectedCourseHTML = course;
@@ -27,7 +27,7 @@ const createPaymentStore = () => {
 			courses: observable,
 			setCourses: action,
 			currentValues: observable,
-			setSelectedCourse: action,
+			setSelectedCourseData: action,
 			setSelectedCourseHTML: action,
 			setPreviousElementItem: action
 		}

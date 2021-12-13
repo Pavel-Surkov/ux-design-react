@@ -72,7 +72,7 @@ export const PaymentCourseSelect = () => {
 
 		// If it's payment of the next stage of a course
 		if (courseId === 1) {
-			paymentStore.setSelectedCourse({
+			paymentStore.setSelectedCourseData({
 				id: 1,
 				title: {
 					rendered: 'Оплата следующего этапа действующего курса'
@@ -102,11 +102,11 @@ export const PaymentCourseSelect = () => {
 			const oldCourse = paymentStore.currentValues.previousElementItem;
 
 			oldCourse.classList.remove('ums-select__list-item_state-active');
-			paymentStore.setSelectedCourse(selectedCourse);
+			paymentStore.setSelectedCourseData(selectedCourse);
 			paymentStore.setPreviousElementItem(target);
 			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		} else {
-			paymentStore.setSelectedCourse(selectedCourse);
+			paymentStore.setSelectedCourseData(selectedCourse);
 			paymentStore.setPreviousElementItem(target);
 			paymentStore.setSelectedCourseHTML(target.innerHTML);
 		}

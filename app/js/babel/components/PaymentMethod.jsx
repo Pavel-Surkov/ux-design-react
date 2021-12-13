@@ -1,5 +1,7 @@
+import React from 'react';
 import { paymentStore } from '../stores';
 import { Erip, AlphaBank, Halva, Bank, Card, Cherepaha } from './paymentMethods';
+import { Observer } from 'mobx-react-lite';
 
 export const PaymentMethod = () => {
 	const currentCourse = paymentStore.currentValues.selectedCourse;
@@ -17,12 +19,36 @@ export const PaymentMethod = () => {
 			<div className="payment-form__section-grid payment-form__section-options payment-methods" />
 			<div id="payment-anchor" />
 			<div className="payment-form__content payment-form-list">
-				<Erip />
-				<AlphaBank />
-				<Halva />
-				<Bank />
-				<Card />
-				<Cherepaha />
+				<Observer>
+					{() => {
+						const selectedCourse = paymentStore.currentValues.selectedCourseData;
+
+						// If it's payment of the next stage of a course
+						if (selectedCourse.id === 1) {
+							return (
+								<React.Fragment>
+									<Erip />
+									<Halva />
+									<Bank />
+									<Card />
+									<Cherepaha />
+								</React.Fragment>
+							);
+						}
+
+						return (
+							<React.Fragment>
+								<Erip />
+								<AlphaBank />
+								<Halva />
+								<Bank />
+								<Card />
+								<Cherepaha />
+							</React.Fragment>
+						);
+						// Function that sorts this array if ther
+					}}
+				</Observer>
 			</div>
 		</section>
 	);
