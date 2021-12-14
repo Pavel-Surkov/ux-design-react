@@ -76,6 +76,10 @@ export const PaymentCourseSelect = () => {
 				id: 1,
 				title: {
 					rendered: 'Оплата следующего этапа действующего курса'
+				},
+				acf: {
+					ums_course_info_price: 0,
+					ums_course_info_price_sale: 0
 				}
 			});
 
