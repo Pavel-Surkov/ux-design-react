@@ -3,6 +3,11 @@ import { Observer } from 'mobx-react-lite';
 import { paymentStore } from '../stores';
 
 export const PaymentMethodsList = () => {
+	const handleRadioClick = e => {
+		const target = e.target;
+		paymentStore.setPaymentMethod(target.dataset.payment);
+	};
+
 	return (
 		<div className="payment-form__section-grid payment-form__section-options payment-methods">
 			<Observer>
@@ -38,28 +43,21 @@ export const PaymentMethodsList = () => {
 
 					// If it's payment of the next stage of a course
 					if (selectedCourse.id === 1) {
-						methods = methods.filter(method => {
-							if (method.value === 'alphabank') {
-								return false;
-							}
-
-							return true;
-						});
+						methods = methods.filter(method => (method.value === 'alphabank' ? false : true));
 					}
 
-					return methods.map(method => {
-						return (
-							<label className="payment-item payment-form__method" key={method.value}>
-								<input
-									type="radio"
-									name="payment"
-									className="payment-item__input"
-									data-payment={method.value}
-								/>
-								<p className="payment-item__name">{method.text}</p>
-							</label>
-						);
-					});
+					return methods.map(method => (
+						<label className="payment-item payment-form__method" key={method.value}>
+							<input
+								type="radio"
+								name="payment"
+								className="payment-item__input"
+								data-payment={method.value}
+								onClick={handleRadioClick}
+							/>
+							<p className="payment-item__name">{method.text}</p>
+						</label>
+					));
 				}}
 			</Observer>
 		</div>

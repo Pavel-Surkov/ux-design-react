@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
+import React, { useState } from 'react';
+import { Observer } from 'mobx-react-lite';
+import { reaction } from 'mobx';
 import { paymentStore } from '../../stores';
 import { isEmpty } from '../../functions';
 
-export const Erip = observer(() => {
+export const Erip = () => {
 	const [price, setPrice] = useState(0);
 
-	useEffect(
-		() => {
-			const currentCourse = paymentStore.currentValues.selectedCourseData;
-
-			if (!isEmpty(currentCourse)) {
-				const currentPrice = currentCourse.acf['ums_course_info_price'];
+	reaction(
+		() => paymentStore.currentValues.selectedCourseData,
+		data => {
+			if (!isEmpty(data)) {
+				const currentPrice = data.acf['ums_course_info_price'];
 				setPrice(currentPrice);
 			}
-		},
-		[paymentStore.currentValues.selectedCourseData]
+			console.log('rendered'); // Triggers by ariphmetical progression;
+		}
 	);
 
-	// TODO: Write this component
+	// TODO:
+	// Add behavior: after the select triggers and new course sets, we need to
+	// close all the 3rd block (remove all 'payment-section_state-active' classes)
+	// from methods sections
 
 	return (
-		<section className="payment-section payment-form__section">
-			<div className="erip-payment payment-form__section-item">
-				<span className="payment-form__section-name">3. Как оплатить через ЕРИП</span>
-				<div className="erip-payment__wrapper">
-					<div className="erip-payment__price">
-						Сумма для оплаты
-						<span className="erip-payment__price-value">{price} BYN</span>
-					</div>
-					<div className="erip-payment__grid">
-						<div className="promocode b-promocode erip-payment__promocode">
-							<label className="toggle-checkbox b-promocode__toggle-button">
-								<input type="checkbox" name="promocode-toggle" className="toggle-checkbox__input" />
-								<div className="toggle-checkbox__element" />
-								<p className="toggle-checkbox__name">У меня есть промокод</p>
-							</label>
-							<div className="form__input promocode-input payment-form__input b-promocode__input" />
+		<div className="erip-payment payment-form__section-item">
+			<span className="payment-form__section-name">3. Как оплатить через ЕРИП</span>
+			<div className="erip-payment__wrapper">
+				<div className="erip-payment__price">
+					Сумма для оплаты<span className="erip-payment__price-value">{price} BYN</span>
+				</div>
+				<div className="erip-payment__grid">
+					<div className="promocode b-promocode erip-payment__promocode">
+						<label className="toggle-checkbox b-promocode__toggle-button">
+							<input type="checkbox" name="promocode-toggle" className="toggle-checkbox__input" />
+							<div className="toggle-checkbox__element" />
+							<p className="toggle-checkbox__name">У меня есть промокод</p>
+						</label>
+						<div className="form__input promocode-input payment-form__input b-promocode__input">
 							<input
 								data-payment="erip"
 								type="text"
@@ -67,7 +68,7 @@ export const Erip = observer(() => {
 				<p className="payment-message erip-payment__message">
 					<span className="erip-payment__message-note">
 						*Скидки по акциям и промокодам не суммируются.
-					</span>После внесения платежа, отправьте копию квитанции на <a href="mailto:hello@ux-school.by">hello@ux-school.by</a>
+					</span>После внесения платежа, отправьте копию квитанции на&nbsp;<a href="mailto:hello@ux-school.by">hello@ux-school.by</a>
 				</p>
 				<div className="erip-payment__content">
 					<div className="erip-payment__content-wrapper">
@@ -85,14 +86,17 @@ export const Erip = observer(() => {
 					</div>
 					<figure className="erip-payment__qr-code">
 						<img
-							className="erip-payment__qr-code-img"
-							src="<?php echo esc_url( get_template_directory_uri() ); ?>/img/qr-code.svg"
+							data-lazyloaded="1"
+							src="https://ux-school.by/wp-content/themes/ux-mind-school/img/qr-code.svg"
+							className="erip-payment__qr-code-img litespeed-loaded"
+							data-src="https://ux-school.by/wp-content/themes/ux-mind-school/img/qr-code.svg"
 							alt="UX Mind School - оплата курсов с помощью ЕРИП"
+							data-was-processed="true"
 						/>
 						<figcaption className="erip-payment__qr-code-note">Код услуги: 4725501</figcaption>
 					</figure>
 				</div>
 			</div>
-		</section>
+		</div>
 	);
-});
+};

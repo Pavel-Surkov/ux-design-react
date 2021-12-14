@@ -21,6 +21,11 @@ const createPaymentStore = () => {
 			},
 			setPreviousElementItem(el) {
 				this.currentValues.previousElementItem = el;
+			},
+			// For changing of payment method
+			paymentMethod: null,
+			setPaymentMethod(method) {
+				this.paymentMethod = method;
 			}
 		},
 		{
@@ -29,7 +34,9 @@ const createPaymentStore = () => {
 			currentValues: observable,
 			setSelectedCourseData: action,
 			setSelectedCourseHTML: action,
-			setPreviousElementItem: action
+			setPreviousElementItem: action,
+			paymentMethod: observable,
+			setPaymentMethod: action
 		}
 	);
 };

@@ -1,18 +1,44 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { paymentStore } from '../stores';
+import { reaction } from 'mobx';
 import { Erip, AlphaBank, Halva, Bank, Card, Cherepaha } from './paymentMethods';
-import { Observer } from 'mobx-react-lite';
 import { PaymentMethodsList } from './PaymentMethodsList';
 
 export const PaymentMethod = () => {
-	const currentCourse = paymentStore.currentValues.selectedCourse;
+	const [
+		eripSectionRef,
+		alphabankSectionRef,
+		halvaSectionRef,
+		bankSectionRef,
+		cardSectionRef,
+		cherepahaSectionRef
+	] = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
 
-	if (currentCourse) {
-		// TODO:
-		// 1) Create a sample for each payment method in currentCourse.methods
-		// 2) Import them here
-		// 3) Output them if there is a suit in currentCourse.methods
-	}
+	const availableMethods = {
+		erip: eripSectionRef,
+		alphabank: alphabankSectionRef,
+		halva: halvaSectionRef,
+		bank: bankSectionRef,
+		card: cardSectionRef,
+		cherepaha: cherepahaSectionRef
+	};
+
+	// Shows and hides current method's block
+	reaction(
+		() => paymentStore.paymentMethod, // observable value
+		(method, prevMethod) => {
+			const currentRef = availableMethods[method];
+			const prevRef = availableMethods[prevMethod];
+
+			if (prevMethod) {
+				prevRef.current.classList.remove('payment-section_state-active');
+			}
+
+			if (currentRef) {
+				currentRef.current.classList.add('payment-section_state-active');
+			}
+		}
+	);
 
 	return (
 		<section className="payment-form__section">
@@ -20,36 +46,24 @@ export const PaymentMethod = () => {
 			<PaymentMethodsList />
 			<div id="payment-anchor" />
 			<div className="payment-form__content payment-form-list">
-				<Observer>
-					{() => {
-						const selectedCourse = paymentStore.currentValues.selectedCourseData;
-
-						// If it's payment of the next stage of a course
-						if (selectedCourse.id === 1) {
-							return (
-								<React.Fragment>
-									<Erip />
-									<Halva />
-									<Bank />
-									<Card />
-									<Cherepaha />
-								</React.Fragment>
-							);
-						}
-
-						return (
-							<React.Fragment>
-								<Erip />
-								<AlphaBank />
-								<Halva />
-								<Bank />
-								<Card />
-								<Cherepaha />
-							</React.Fragment>
-						);
-						// Function that sorts this array if ther
-					}}
-				</Observer>
+				<section ref={eripSectionRef} className="payment-section payment-form__section">
+					<Erip />
+				</section>
+				<section ref={alphabankSectionRef} className="payment-section payment-form__section">
+					<AlphaBank />
+				</section>
+				<section ref={halvaSectionRef} className="payment-section payment-form__section">
+					<Halva />
+				</section>
+				<section ref={bankSectionRef} className="payment-section payment-form__section">
+					<Bank />
+				</section>
+				<section ref={cardSectionRef} className="payment-section payment-form__section">
+					<Card />
+				</section>
+				<section ref={cherepahaSectionRef} className="payment-section payment-form__section">
+					<Cherepaha />
+				</section>
 			</div>
 		</section>
 	);

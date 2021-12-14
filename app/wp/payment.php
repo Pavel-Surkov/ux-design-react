@@ -71,7 +71,7 @@ $is_promocode = get_field('promocode_bool', 2);
 										</div>
 									</div>
 								</section>
-								<section class="payment-form__section">
+								 <section class="payment-form__section">
 									<p class="payment-form__section-name">2. Выберите способ оплаты</p>
 									<div class="payment-form__section-grid payment-form__section-options payment-methods"></div>
 								</section>
@@ -275,7 +275,7 @@ $is_promocode = get_field('promocode_bool', 2);
 										</div>
 									</section>
 									<!-- END CHEREPAHA -->
-								</div>
+								</div> 
 							</div>
 						</div>
 					</div>
