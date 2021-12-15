@@ -5,21 +5,11 @@ import { paymentStore } from '../../stores';
 import { isEmpty } from '../../functions';
 
 export const Erip = () => {
-	const [price, setPrice] = useState(0);
+	let price = 0;
 
-	reaction(
-		() => paymentStore.currentValues.selectedCourseData,
-		data => {
-			if (!isEmpty(data)) {
-				const currentPrice = data.acf['ums_course_info_price'];
-				setPrice(currentPrice);
-			}
-			console.log('rendered'); // Triggers by ariphmetical progression;
-		}
-	);
-
-	// TODO:
-	// Add behavior: after the select triggers and new course sets, we need to
+	// TODOS:
+	// 1) Think how to manage price (useState is the best option now)
+	// 2) Add behavior: after the select triggers and new course sets, we need to
 	// close all the 3rd block (remove all 'payment-section_state-active' classes)
 	// from methods sections
 
@@ -28,7 +18,8 @@ export const Erip = () => {
 			<span className="payment-form__section-name">3. Как оплатить через ЕРИП</span>
 			<div className="erip-payment__wrapper">
 				<div className="erip-payment__price">
-					Сумма для оплаты<span className="erip-payment__price-value">{price} BYN</span>
+					Сумма для оплаты
+					<Observer>{() => <span className="erip-payment__price-value">{price} BYN</span>}</Observer>
 				</div>
 				<div className="erip-payment__grid">
 					<div className="promocode b-promocode erip-payment__promocode">
