@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
-import { Observer } from 'mobx-react-lite';
+import React from 'react';
+import { Observer, useLocalObservable } from 'mobx-react-lite';
 import { reaction } from 'mobx';
 import { paymentStore } from '../../stores';
 import { isEmpty } from '../../functions';
 
 export const Erip = () => {
-	let price = 0;
+	const localPrice = useLocalObservable(() => ({
+		currentPrice: 0,
+		setCurrentPrice(newPrice) {
+			localPrice.currentPrice = newPrice;
+		}
+	}));
+
+	// Changes the local price when we change course selection
+	reaction(
+		() => paymentStore.currentValues.selectedCourseData,
+		data => {
+			if (!isEmpty(data)) {
+				const newPrice = data.acf['ums_course_info_price'];
+				localPrice.setCurrentPrice(newPrice);
+			}
+		}
+	);
 
 	// TODOS:
-	// 1) Think how to manage price (useState is the best option now)
-	// 2) Add behavior: after the select triggers and new course sets, we need to
+	// Add behavior: after the select triggers and new course sets, we need to
 	// close all the 3rd block (remove all 'payment-section_state-active' classes)
 	// from methods sections
 
@@ -19,7 +34,9 @@ export const Erip = () => {
 			<div className="erip-payment__wrapper">
 				<div className="erip-payment__price">
 					Сумма для оплаты
-					<Observer>{() => <span className="erip-payment__price-value">{price} BYN</span>}</Observer>
+					<Observer>
+						{() => <span className="erip-payment__price-value">{localPrice.currentPrice} BYN</span>}
+					</Observer>
 				</div>
 				<div className="erip-payment__grid">
 					<div className="promocode b-promocode erip-payment__promocode">
